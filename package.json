@@ -1,0 +1,23 @@
+{
+  "name": "example-http-uploading-downloading-file",
+  "version": "0.0.0",
+  "description": "A example of streaming uploading and downloading file using HTTP.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YiJiangFengYun/example-http-uploading-downloading-file.git"
+  },
+  "author": "YiJiangFengYun",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/YiJiangFengYun/example-http-uploading-downloading-file/issues"
+  },
+  "homepage": "https://github.com/YiJiangFengYun/example-http-uploading-downloading-file#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1"
+  }
+}
