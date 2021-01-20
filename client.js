@@ -14,6 +14,11 @@ const url = 'http://127.0.0.1:3000';
 switch (strOption) {
     case "upload": {
         console.info(`Uploading...`);
+
+        let byteCurr = 0;
+        let byteTotal = fs.statSync(filePath).size;
+        let idInterval = 0;
+
         const readStream = fs.createReadStream(filePath);
         readStream.on("error", (err) => {
             console.error(`Read file error!`);
@@ -24,11 +29,30 @@ switch (strOption) {
             console.info(`Read file is complete!`);
         });
 
+        const update = () => {
+            byteCurr = readStream.bytesRead;
+            if (byteTotal) {
+                console.info(`Downloading: ${((byteCurr / byteTotal) * 100).toFixed(2)}%`);
+            }
+        }
+
+        idInterval = setInterval(update, 500);
+
         fetch(`${url}/upload`, {method: 'POST', body: readStream })
-        .then(() => {
+        .then((response) => {
+            console.info(`Requesting ok!`);
+            response.headers.forEach((value, name) => {
+                console.info(`Header ${name}:${value}`);
+            });
+
+            clearInterval(idInterval);
+
             console.info(`Upload file is complete!`);
         })
         .catch((err) => {
+
+            clearInterval(idInterval);
+
             console.error('Uploading file error!');
             console.error(err);
         });
@@ -36,15 +60,41 @@ switch (strOption) {
     }
     case "download": {
         console.info(`Downloading...`);
+        let byteCurr = 0;
+        let byteTotal = 0;
+        let idInterval = 0;
         const writeSteam = fs.createWriteStream(filePath);
+
+        const update = () => {
+            byteCurr = writeSteam.bytesWritten;
+            if (byteTotal) {
+                console.info(`Downloading: ${((byteCurr / byteTotal) * 100).toFixed(2)}%`);
+            }
+        }
+
         fetch(`${url}/download`)
         .then(response => {
-            return pipelinePromise(response.body, writeSteam)
+            console.info(`Requesting ok!`);
+            response.headers.forEach((value, name) => {
+                console.info(`Header ${name}:${value}`);
+            });
+
+            byteTotal = Number(response.headers.get('content-length'));
+
+            idInterval = setInterval(update, 500);
+
+            return pipelinePromise(response.body, writeSteam);
         })
         .then(() => {
+
+            clearInterval(idInterval);
+
             console.info(`Download file is complete!`);
         })
         .catch(err => {
+
+            clearInterval(idInterval);
+
             console.error(`Downloading file error!`);
             console.error(err);
         });
