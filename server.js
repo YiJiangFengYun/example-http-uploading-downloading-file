@@ -10,8 +10,10 @@ app.post('/upload', function (req, res, next) {
     req.on('end', next);
 });
 
-app.get('/download', function (req, res, next) {
-    res.download(filePath, next);
+app.get('/download', function (req, res) {
+    res.download(filePath, (err) => {
+        if (err) console.error(err);
+    });
 });
 
 app.listen(port, () => {
