@@ -32,7 +32,7 @@ switch (strOption) {
         const update = () => {
             byteCurr = readStream.bytesRead;
             if (byteTotal) {
-                console.info(`Downloading: ${((byteCurr / byteTotal) * 100).toFixed(2)}%`);
+                console.info(`Uploading: ${((byteCurr / byteTotal) * 100).toFixed(2)}%`);
             }
         }
 
